@@ -1,12 +1,25 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { Home } from './src/screens/Home';
+import { StatusBar } from 'react-native';
+import { Home } from '@/screens/Home';
+import {
+  useFonts,
+  Roboto_700Bold,
+  Roboto_400Regular,
+  Roboto_500Medium,
+} from '@expo-google-fonts/roboto';
+import { Text } from 'react-native';
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    Roboto_700Bold,
+    Roboto_400Regular,
+    Roboto_500Medium,
+  });
+
   return (
     <>
-      <Home />
-      <StatusBar style="auto" />
+      {fontsLoaded ? <Home /> : <Text>Loading...</Text>}
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
     </>
   );
 }
