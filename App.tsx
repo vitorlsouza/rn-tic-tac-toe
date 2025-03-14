@@ -27,6 +27,7 @@ export default function App() {
 
   const onBackToHome = () => {
     setGameStarted(false);
+    setPlayerFirst(true);
   };
 
   return (
