@@ -1,4 +1,4 @@
 import { Player } from '@/types';
 
-export const PLAYER: Player = 'X';
-export const COMPUTER: Player = 'O';
+export const PLAYER_X: Player = 'X';
+export const PLAYER_O: Player = 'O';

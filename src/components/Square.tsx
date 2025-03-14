@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { theme } from '@/theme';
-
+import { PLAYER_X } from '@/constants';
 type SquareProps = {
   value: string | null;
   onPress: () => void;
@@ -10,10 +10,11 @@ type SquareProps = {
 };
 
 export const Square: React.FC<SquareProps> = ({ value, onPress, disabled = false, index }) => {
+  const textStyle = value === PLAYER_X ? theme.colors.playerX : theme.colors.playerO;
   return (
     <TouchableOpacity activeOpacity={0.7} onPress={onPress} disabled={disabled}>
       <View style={styles.square}>
-        <Text style={styles.squareText}>{value}</Text>
+        <Text style={[styles.squareText, { color: textStyle }]}>{value}</Text>
       </View>
     </TouchableOpacity>
   );

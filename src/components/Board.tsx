@@ -10,13 +10,10 @@ type BoardProps = {
 };
 
 export const Board: React.FC<BoardProps> = ({ board, onSquarePress, disabled }) => {
-  // Usado para forçar a recriação dos componentes animados quando o jogo é reiniciado
   const [boardKey, setBoardKey] = useState<number>(0);
 
-  // Detecta quando o tabuleiro é limpo (novo jogo)
   useEffect(() => {
     if (board.every((square) => square === null)) {
-      // Incrementa a key para forçar a recriação dos componentes
       setBoardKey((prev) => prev + 1);
     }
   }, [board]);
