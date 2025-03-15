@@ -8,11 +8,15 @@ import { useOrientation } from '@/hooks/useOrientation';
 type GameOverModalProps = {
   gameState: GameState;
   onNewGame: () => void;
+  onBackToHome: () => void;
 };
 
-export const GameOverModal: React.FC<GameOverModalProps> = ({ gameState, onNewGame }) => {
+export const GameOverModal: React.FC<GameOverModalProps> = ({
+  gameState,
+  onNewGame,
+  onBackToHome,
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const { isLandscape } = useOrientation();
 
   useEffect(() => {
     const isGameOver = gameState === 'won' || gameState === 'lost' || gameState === 'tie';
@@ -57,6 +61,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({ gameState, onNewGa
             <Text style={styles.modalText}>{message}</Text>
             <View style={styles.buttonContainer}>
               <Button title="New Game" onPress={handleNewGame} fullWidth />
+              <Button title="Back to Home" onPress={onBackToHome} fullWidth />
             </View>
           </View>
         </View>
@@ -100,5 +105,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '100%',
+    gap: 16,
   },
 });

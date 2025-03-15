@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
 import { Board } from '@/components/Board';
 import { theme } from '@/theme';
-import { Button } from '@/components/Button';
 import { ScoreBoard } from '@/components/ScoreBoard';
 import { GameOverModal } from '@/components/GameOverModal';
 import { useGame } from '@/hooks/useGame';
@@ -14,7 +13,7 @@ type GameProps = {
 };
 
 export const Game: React.FC<GameProps> = ({ playerFirst, onBackToHome }) => {
-  const { isLandscape } = useOrientation();
+  const { isLandscape, loading } = useOrientation();
 
   const {
     board,
@@ -24,8 +23,15 @@ export const Game: React.FC<GameProps> = ({ playerFirst, onBackToHome }) => {
     score,
     handleSquarePress,
     startNewGame,
-    isBoardEmpty,
   } = useGame(playerFirst);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -40,36 +46,16 @@ export const Game: React.FC<GameProps> = ({ playerFirst, onBackToHome }) => {
           <View style={styles.status}>
             <Text style={styles.statusText}>{isPlayerTurn ? 'Your turn' : 'Computer turn'}</Text>
           </View>
-          {isLandscape && (
-            <Button
-              title="Back to Home"
-              onPress={onBackToHome}
-              variant={isBoardEmpty ? 'primary' : 'secondary'}
-              disabled={!isBoardEmpty}
-              style={styles.button}
-            />
-          )}
         </View>
-
         <View style={isLandscape ? styles.rightColumn : styles.bottomSection}>
           <Board
             board={board}
             onSquarePress={handleSquarePress}
             disabled={!isPlayerTurn || gameState !== 'playing' || isComputerThinking}
           />
-
-          {!isLandscape && (
-            <Button
-              title="Back to Home"
-              onPress={onBackToHome}
-              variant={isBoardEmpty ? 'primary' : 'secondary'}
-              disabled={!isBoardEmpty}
-              style={styles.button}
-            />
-          )}
         </View>
       </View>
-      <GameOverModal gameState={gameState} onNewGame={startNewGame} />
+      <GameOverModal gameState={gameState} onNewGame={startNewGame} onBackToHome={onBackToHome} />
     </SafeAreaView>
   );
 };
@@ -97,13 +83,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 20,
-    flex: 0.3,
+    flex: 0.4,
   },
   bottomSection: {
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'space-around',
-    flex: 0.7,
+    flex: 0.6,
   },
   leftColumn: {
     flex: 0.4,
@@ -118,10 +103,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingLeft: 10,
-  },
-  button: {
-    marginBottom: 10,
-    width: '100%',
   },
   title: {
     color: theme.colors.text.primary,

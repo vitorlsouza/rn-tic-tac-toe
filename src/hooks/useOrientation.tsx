@@ -12,7 +12,8 @@ const getCurrentOrientation = async (): Promise<OrientationType> => {
 };
 
 export const useOrientation = () => {
-  const [orientation, setOrientation] = useState<OrientationType>('portrait'); // Default value
+  const [orientation, setOrientation] = useState<OrientationType>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const initOrientation = async () => {
@@ -24,6 +25,7 @@ export const useOrientation = () => {
       try {
         await ScreenOrientation.unlockAsync();
         await initOrientation();
+        setLoading(false);
       } catch (error) {
         console.error('Error unlocking orientation:', error);
       }
@@ -47,24 +49,10 @@ export const useOrientation = () => {
     setOrientation(isPortrait ? 'portrait' : 'landscape');
   };
 
-  const lockToPortrait = async () => {
-    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
-  };
-
-  const lockToLandscape = async () => {
-    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-  };
-
-  const unlockOrientation = async () => {
-    await ScreenOrientation.unlockAsync();
-  };
-
   return {
     orientation,
     isPortrait: orientation === 'portrait',
     isLandscape: orientation === 'landscape',
-    lockToPortrait,
-    lockToLandscape,
-    unlockOrientation,
+    loading,
   };
 };
