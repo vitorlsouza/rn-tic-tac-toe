@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Modal, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, Modal, TouchableWithoutFeedback, Dimensions } from 'react-native';
 import { Button } from './Button';
 import { theme } from '@/theme';
 import { GameState } from '@/types';
+import { useOrientation } from '@/hooks/useOrientation';
 
 type GameOverModalProps = {
   gameState: GameState;
@@ -11,6 +12,7 @@ type GameOverModalProps = {
 
 export const GameOverModal: React.FC<GameOverModalProps> = ({ gameState, onNewGame }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const { isLandscape } = useOrientation();
 
   useEffect(() => {
     const isGameOver = gameState === 'won' || gameState === 'lost' || gameState === 'tie';
@@ -44,15 +46,16 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({ gameState, onNewGa
     <Modal
       transparent={true}
       visible={modalVisible}
-      animationType="none"
+      animationType="fade"
       onRequestClose={handleNewGame}
+      supportedOrientations={['portrait', 'landscape']}
     >
       <TouchableWithoutFeedback>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>{title}</Text>
             <Text style={styles.modalText}>{message}</Text>
-            <View>
+            <View style={styles.buttonContainer}>
               <Button title="New Game" onPress={handleNewGame} fullWidth />
             </View>
           </View>
@@ -85,7 +88,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     color: theme.colors.text.primary,
     fontFamily: theme.typography.fontFamily.bold,
-    fontSize: theme.typography.fontSize.xlarge,
+    fontSize: theme.typography.fontSize.xxlarge,
     marginBottom: 16,
   },
   modalText: {
@@ -95,13 +98,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     textAlign: 'center',
   },
-  animationContainer: {
-    width: 150,
-    height: 150,
-    marginBottom: 16,
-  },
-  animation: {
+  buttonContainer: {
     width: '100%',
-    height: '100%',
   },
 });

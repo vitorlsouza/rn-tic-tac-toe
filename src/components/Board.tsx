@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Square } from './Square';
 import { Player } from '@/types';
+import { useOrientation } from '@/hooks/useOrientation';
 
 type BoardProps = {
   board: (Player | null)[];
@@ -11,6 +12,7 @@ type BoardProps = {
 
 export const Board: React.FC<BoardProps> = ({ board, onSquarePress, disabled }) => {
   const [boardKey, setBoardKey] = useState<number>(0);
+  const { isLandscape } = useOrientation();
 
   useEffect(() => {
     if (board.every((square) => square === null)) {
@@ -20,7 +22,7 @@ export const Board: React.FC<BoardProps> = ({ board, onSquarePress, disabled }) 
 
   const renderSquare = (index: number) => {
     return (
-      <View key={`${boardKey}-${index}`}>
+      <View key={`${boardKey}-${index}`} style={styles.squareContainer}>
         <Square
           value={board[index]}
           onPress={() => onSquarePress(index)}
@@ -32,7 +34,10 @@ export const Board: React.FC<BoardProps> = ({ board, onSquarePress, disabled }) 
   };
 
   return (
-    <View style={styles.board} key={`board-${boardKey}`}>
+    <View
+      style={[styles.board, isLandscape ? styles.boardLandscape : styles.boardPortrait]}
+      key={`board-${boardKey}`}
+    >
       <View style={styles.row}>
         {renderSquare(0)}
         {renderSquare(1)}
@@ -54,9 +59,19 @@ export const Board: React.FC<BoardProps> = ({ board, onSquarePress, disabled }) 
 
 const styles = StyleSheet.create({
   board: {
-    marginBottom: 30,
+    aspectRatio: 1,
+  },
+  boardPortrait: {
+    width: '100%',
+  },
+  boardLandscape: {
+    width: '70%',
   },
   row: {
     flexDirection: 'row',
+  },
+  squareContainer: {
+    flex: 1,
+    aspectRatio: 1,
   },
 });

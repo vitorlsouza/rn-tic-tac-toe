@@ -1,11 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
 import { Board } from '@/components/Board';
 import { theme } from '@/theme';
 import { Button } from '@/components/Button';
 import { ScoreBoard } from '@/components/ScoreBoard';
 import { GameOverModal } from '@/components/GameOverModal';
 import { useGame } from '@/hooks/useGame';
+import { useOrientation } from '@/hooks/useOrientation';
 
 type GameProps = {
   playerFirst: boolean;
@@ -13,6 +14,8 @@ type GameProps = {
 };
 
 export const Game: React.FC<GameProps> = ({ playerFirst, onBackToHome }) => {
+  const { isLandscape } = useOrientation();
+
   const {
     board,
     gameState,
@@ -21,29 +24,53 @@ export const Game: React.FC<GameProps> = ({ playerFirst, onBackToHome }) => {
     score,
     handleSquarePress,
     startNewGame,
+    isBoardEmpty,
   } = useGame(playerFirst);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tic Tac Toe</Text>
-      <ScoreBoard
-        playerScore={score.player}
-        computerScore={score.computer}
-        tiesScore={score.ties}
-      />
-      <Board
-        board={board}
-        onSquarePress={handleSquarePress}
-        disabled={!isPlayerTurn || gameState !== 'playing' || isComputerThinking}
-      />
-      <Button
-        title="Back to Home"
-        onPress={onBackToHome}
-        variant="secondary"
-        style={styles.button}
-      />
+    <SafeAreaView style={styles.container}>
+      <View style={isLandscape ? styles.landscapeLayout : styles.portraitLayout}>
+        <View style={isLandscape ? styles.leftColumn : styles.topSection}>
+          <Text style={[styles.title, isLandscape && styles.titleLandscape]}>Tic Tac Toe</Text>
+          <ScoreBoard
+            playerScore={score.player}
+            computerScore={score.computer}
+            tiesScore={score.ties}
+          />
+          <View style={styles.status}>
+            <Text style={styles.statusText}>{isPlayerTurn ? 'Your turn' : 'Computer turn'}</Text>
+          </View>
+          {isLandscape && (
+            <Button
+              title="Back to Home"
+              onPress={onBackToHome}
+              variant={isBoardEmpty ? 'primary' : 'secondary'}
+              disabled={!isBoardEmpty}
+              style={styles.button}
+            />
+          )}
+        </View>
+
+        <View style={isLandscape ? styles.rightColumn : styles.bottomSection}>
+          <Board
+            board={board}
+            onSquarePress={handleSquarePress}
+            disabled={!isPlayerTurn || gameState !== 'playing' || isComputerThinking}
+          />
+
+          {!isLandscape && (
+            <Button
+              title="Back to Home"
+              onPress={onBackToHome}
+              variant={isBoardEmpty ? 'primary' : 'secondary'}
+              disabled={!isBoardEmpty}
+              style={styles.button}
+            />
+          )}
+        </View>
+      </View>
       <GameOverModal gameState={gameState} onNewGame={startNewGame} />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -51,16 +78,68 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
+    paddingHorizontal: 20,
+  },
+  portraitLayout: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 40,
+  },
+  landscapeLayout: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  topSection: {
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: 20,
+    flex: 0.3,
+  },
+  bottomSection: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    flex: 0.7,
+  },
+  leftColumn: {
+    flex: 0.4,
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: 10,
+  },
+  rightColumn: {
+    flex: 0.6,
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: 10,
   },
   button: {
     marginBottom: 10,
+    width: '100%',
   },
   title: {
     color: theme.colors.text.primary,
     fontFamily: theme.typography.fontFamily.bold,
     fontSize: theme.typography.fontSize.xxlarge,
     marginBottom: 30,
+    textAlign: 'center',
+  },
+  titleLandscape: {
+    fontSize: theme.typography.fontSize.xlarge,
+    marginBottom: 10,
+  },
+  status: {
+    marginVertical: 20,
+  },
+  statusText: {
+    color: theme.colors.text.primary,
+    fontFamily: theme.typography.fontFamily.medium,
+    fontSize: theme.typography.fontSize.large,
   },
 });

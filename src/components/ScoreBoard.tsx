@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { theme } from '@/theme';
 import { typography } from '@/theme/typography';
+import { useOrientation } from '@/hooks/useOrientation';
 
 type ScoreBoardProps = {
   playerScore: number;
@@ -14,19 +15,27 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({
   computerScore,
   tiesScore,
 }) => {
+  const { isLandscape } = useOrientation();
+
   return (
     <View style={styles.scoreBoard}>
       <View style={styles.scoreItem}>
         <Text style={[styles.scoreLabel, { color: theme.colors.playerX }]}>You (X)</Text>
-        <Text style={styles.scoreValue}>{playerScore}</Text>
+        <Text style={[styles.scoreValue, isLandscape && styles.scoreValueLandscape]}>
+          {playerScore}
+        </Text>
       </View>
       <View style={styles.scoreItem}>
         <Text style={styles.scoreLabel}>Ties</Text>
-        <Text style={styles.scoreValue}>{tiesScore}</Text>
+        <Text style={[styles.scoreValue, isLandscape && styles.scoreValueLandscape]}>
+          {tiesScore}
+        </Text>
       </View>
       <View style={styles.scoreItem}>
         <Text style={[styles.scoreLabel, { color: theme.colors.playerO }]}>CPU (O)</Text>
-        <Text style={styles.scoreValue}>{computerScore}</Text>
+        <Text style={[styles.scoreValue, isLandscape && styles.scoreValueLandscape]}>
+          {computerScore}
+        </Text>
       </View>
     </View>
   );
@@ -38,7 +47,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     maxWidth: 300,
-    marginBottom: 30,
+    marginBottom: 20,
   },
   scoreItem: {
     alignItems: 'center',
@@ -62,5 +71,8 @@ const styles = StyleSheet.create({
     color: theme.colors.text.primary,
     fontFamily: typography.fontFamily.bold,
     fontSize: typography.fontSize.xlarge,
+  },
+  scoreValueLandscape: {
+    fontSize: typography.fontSize.large,
   },
 });

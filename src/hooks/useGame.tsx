@@ -1,6 +1,6 @@
 import { calculateWinner, findBestMove, isBoardFull } from '@/utils/gameLogic';
 import { GameState, BoardState } from '@/types';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { PLAYER_X, PLAYER_O } from '@/constants';
 
 export const useGame = (playerFirst: boolean) => {
@@ -9,6 +9,8 @@ export const useGame = (playerFirst: boolean) => {
   const [isPlayerTurn, setIsPlayerTurn] = useState(playerFirst);
   const [isComputerThinking, setIsComputerThinking] = useState(false);
   const [score, setScore] = useState({ player: 0, computer: 0, ties: 0 });
+
+  const isBoardEmpty = useMemo(() => board.every((cell) => cell === null), [board]);
 
   const makeComputerMove = useCallback(() => {
     setIsComputerThinking(true);
@@ -79,5 +81,6 @@ export const useGame = (playerFirst: boolean) => {
     score,
     handleSquarePress,
     startNewGame,
+    isBoardEmpty,
   };
 };
