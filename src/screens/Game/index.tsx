@@ -23,6 +23,7 @@ export const Game: React.FC<GameProps> = ({ playerFirst, onBackToHome }) => {
     score,
     handleSquarePress,
     startNewGame,
+    handleAnimationComplete,
   } = useGame(playerFirst);
 
   if (loading) {
@@ -52,6 +53,7 @@ export const Game: React.FC<GameProps> = ({ playerFirst, onBackToHome }) => {
             board={board}
             onSquarePress={handleSquarePress}
             disabled={!isPlayerTurn || gameState !== 'playing' || isComputerThinking}
+            onLastAnimationComplete={handleAnimationComplete}
           />
         </View>
       </View>

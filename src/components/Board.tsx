@@ -8,26 +8,46 @@ type BoardProps = {
   board: (Player | null)[];
   onSquarePress: (index: number) => void;
   disabled: boolean;
+  onLastAnimationComplete?: () => void;
 };
 
-export const Board: React.FC<BoardProps> = ({ board, onSquarePress, disabled }) => {
+export const Board: React.FC<BoardProps> = ({
+  board,
+  onSquarePress,
+  disabled,
+  onLastAnimationComplete,
+}) => {
   const [boardKey, setBoardKey] = useState<number>(0);
+  const [lastPlayedIndex, setLastPlayedIndex] = useState<number | null>(null);
   const { isLandscape } = useOrientation();
 
   useEffect(() => {
     if (board.every((square) => square === null)) {
       setBoardKey((prev) => prev + 1);
+      setLastPlayedIndex(null);
     }
   }, [board]);
+
+  const handleSquarePress = (index: number) => {
+    setLastPlayedIndex(index);
+    onSquarePress(index);
+  };
+
+  const handleAnimationComplete = (index: number) => {
+    if (lastPlayedIndex === index && onLastAnimationComplete) {
+      onLastAnimationComplete();
+    }
+  };
 
   const renderSquare = (index: number) => {
     return (
       <View key={`${boardKey}-${index}`} style={styles.squareContainer}>
         <Square
           value={board[index]}
-          onPress={() => onSquarePress(index)}
+          onPress={() => handleSquarePress(index)}
           disabled={disabled || board[index] !== null}
           index={index}
+          onAnimationComplete={() => handleAnimationComplete(index)}
         />
       </View>
     );
