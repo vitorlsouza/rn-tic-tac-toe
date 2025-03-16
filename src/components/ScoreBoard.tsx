@@ -18,7 +18,7 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({
   const { isLandscape } = useOrientation();
 
   return (
-    <View style={styles.scoreBoard}>
+    <View testID="score-board-component" style={styles.scoreBoard}>
       <View style={styles.scoreItem}>
         <Text style={[styles.scoreLabel, { color: theme.colors.playerX }]}>You (X)</Text>
         <Text style={[styles.scoreValue, isLandscape && styles.scoreValueLandscape]}>

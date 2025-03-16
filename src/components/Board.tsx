@@ -35,6 +35,7 @@ export const Board: React.FC<BoardProps> = ({ board, onSquarePress, disabled }) 
 
   return (
     <View
+      testID="board-component"
       style={[styles.board, isLandscape ? styles.boardLandscape : styles.boardPortrait]}
       key={`board-${boardKey}`}
     >

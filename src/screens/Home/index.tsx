@@ -20,8 +20,14 @@ export const Home: React.FC<HomeProps> = ({ onStartGame }) => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button title="I go first" onPress={() => onStartGame(true)} style={styles.button} />
           <Button
+            testID="button-I go first"
+            title="I go first"
+            onPress={() => onStartGame(true)}
+            style={styles.button}
+          />
+          <Button
+            testID="button-Computer goes first"
             title="Computer goes first"
             onPress={() => onStartGame(false)}
             style={styles.button}

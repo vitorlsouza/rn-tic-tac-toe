@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Modal, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Modal, TouchableWithoutFeedback, ModalProps } from 'react-native';
 import { Button } from './Button';
 import { theme } from '@/theme';
 import { GameState } from '@/types';
-import { useOrientation } from '@/hooks/useOrientation';
 
-type GameOverModalProps = {
+type GameOverModalProps = ModalProps & {
   gameState: GameState;
   onNewGame: () => void;
   onBackToHome: () => void;
@@ -15,6 +14,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
   gameState,
   onNewGame,
   onBackToHome,
+  ...rest
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -53,6 +53,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
       animationType="fade"
       onRequestClose={handleNewGame}
       supportedOrientations={['portrait', 'landscape']}
+      {...rest}
     >
       <TouchableWithoutFeedback>
         <View style={styles.modalContainer}>

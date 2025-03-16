@@ -55,7 +55,12 @@ export const Game: React.FC<GameProps> = ({ playerFirst, onBackToHome }) => {
           />
         </View>
       </View>
-      <GameOverModal gameState={gameState} onNewGame={startNewGame} onBackToHome={onBackToHome} />
+      <GameOverModal
+        testID="game-over-modal-component"
+        gameState={gameState}
+        onNewGame={startNewGame}
+        onBackToHome={onBackToHome}
+      />
     </SafeAreaView>
   );
 };
