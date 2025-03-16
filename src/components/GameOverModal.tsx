@@ -4,6 +4,7 @@ import { Button } from './Button';
 import { theme } from '@/theme';
 import { GameState } from '@/types';
 import LottieView from 'lottie-react-native';
+import { useOrientation } from '@/hooks/useOrientation';
 
 type GameOverModalProps = ModalProps & {
   gameState: GameState;
@@ -18,6 +19,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
   ...rest
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const { isLandscape } = useOrientation();
   const animationRef = useRef<LottieView>(null);
 
   useEffect(() => {
@@ -70,7 +72,12 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             {animationSource && (
-              <View style={styles.animationContainer}>
+              <View
+                style={[
+                  styles.animationContainer,
+                  isLandscape && styles.animationContainerLandscape,
+                ]}
+              >
                 <LottieView
                   ref={animationRef}
                   source={animationSource}
@@ -82,9 +89,9 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
             )}
             <Text style={styles.modalTitle}>{title}</Text>
             <Text style={styles.modalText}>{message}</Text>
-            <View style={styles.buttonContainer}>
-              <Button title="New Game" onPress={handleNewGame} fullWidth />
-              <Button title="Back to Home" onPress={onBackToHome} fullWidth />
+            <View style={[styles.buttonContainer, isLandscape && styles.buttonContainerLandscape]}>
+              <Button title="New Game" onPress={handleNewGame} />
+              <Button title="Back to Home" onPress={onBackToHome} />
             </View>
           </View>
         </View>
@@ -106,7 +113,7 @@ const styles = StyleSheet.create({
     padding: 24,
     alignItems: 'center',
     width: '80%',
-    maxWidth: 320,
+    maxWidth: 370,
     shadowColor: theme.colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -119,6 +126,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  animationContainerLandscape: {
+    width: '100%',
+    height: 80,
   },
   animation: {
     width: '100%',
@@ -140,5 +151,9 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
     gap: 16,
+  },
+  buttonContainerLandscape: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
