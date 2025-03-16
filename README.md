@@ -25,7 +25,7 @@ Before running the game, make sure you have the following installed:
 1. Clone the repository:
 
 ```bash
-git clone <[repository-url](https://github.com/vitorlsouza/rn-tic-tac-toe.git)>
+git clone https://github.com/vitorlsouza/rn-tic-tac-toe.git
 cd tic-tac-toe
 ```
 
