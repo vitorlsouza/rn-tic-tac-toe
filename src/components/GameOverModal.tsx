@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, Text, View, Modal, TouchableWithoutFeedback, ModalProps } from 'react-native';
 import { Button } from './Button';
 import { theme } from '@/theme';
 import { GameState } from '@/types';
+import LottieView from 'lottie-react-native';
 
 type GameOverModalProps = ModalProps & {
   gameState: GameState;
@@ -17,12 +18,18 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
   ...rest
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const animationRef = useRef<LottieView>(null);
 
   useEffect(() => {
     const isGameOver = gameState === 'won' || gameState === 'lost' || gameState === 'tie';
 
     if (isGameOver) {
       setModalVisible(true);
+
+      if (animationRef.current) {
+        animationRef.current.reset();
+        animationRef.current.play();
+      }
     } else {
       setModalVisible(false);
     }
@@ -34,16 +41,20 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
 
   let title = '';
   let message = '';
+  let animationSource = null;
 
   if (gameState === 'won') {
     title = 'Congratulations!';
     message = 'You won!';
+    animationSource = require('@/assets/animations/victory.json');
   } else if (gameState === 'lost') {
     title = 'Too bad!';
     message = 'You lost!';
+    animationSource = require('@/assets/animations/defeat.json');
   } else if (gameState === 'tie') {
     title = 'Tie!';
     message = 'Nobody won.';
+    animationSource = require('@/assets/animations/tie.json');
   }
 
   return (
@@ -58,6 +69,17 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
       <TouchableWithoutFeedback>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
+            {animationSource && (
+              <View style={styles.animationContainer}>
+                <LottieView
+                  ref={animationRef}
+                  source={animationSource}
+                  autoPlay
+                  loop={false}
+                  style={styles.animation}
+                />
+              </View>
+            )}
             <Text style={styles.modalTitle}>{title}</Text>
             <Text style={styles.modalText}>{message}</Text>
             <View style={styles.buttonContainer}>
@@ -90,6 +112,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+  },
+  animationContainer: {
+    width: '100%',
+    height: 150,
+    marginBottom: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  animation: {
+    width: '100%',
+    height: '100%',
   },
   modalTitle: {
     color: theme.colors.text.primary,

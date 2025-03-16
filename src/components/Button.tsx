@@ -58,8 +58,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: theme.colors.text.primary,
-    fontFamily: theme.typography.fontFamily.medium,
-    fontSize: theme.typography.fontSize.medium,
+    fontFamily: theme.typography.fontFamily.bold,
+    fontSize: theme.typography.fontSize.large,
     textAlign: 'center',
   },
   buttonTextSecondary: {
