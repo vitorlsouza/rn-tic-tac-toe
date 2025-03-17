@@ -2,6 +2,11 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import { Game } from '@/screens/Game';
 
+jest.mock('@shopify/react-native-skia', () => ({
+  Canvas: 'Canvas',
+  Path: 'Path',
+}));
+
 jest.mock('@/hooks/useOrientation', () => ({
   useOrientation: () => ({ isLandscape: false, loading: false }),
 }));

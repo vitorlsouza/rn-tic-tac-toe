@@ -98,5 +98,6 @@ export const useGame = (playerFirst: boolean) => {
     startNewGame,
     isBoardEmpty,
     handleAnimationComplete,
+    lastMove,
   };
 };
